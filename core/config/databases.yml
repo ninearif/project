@@ -1,0 +1,12 @@
+  
+all:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'mysql:dbname=web;host=127.0.0.1'
+      profiler: false
+      username: root
+      password: "<?php echo urlencode('') ; ?>"
+      attributes:
+        quote_identifier: true  
+  
