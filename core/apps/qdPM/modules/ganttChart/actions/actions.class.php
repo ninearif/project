@@ -74,7 +74,7 @@ class ganttChartActions extends sfActions
   
   public function executeIndex(sfWebRequest $request)
   {  
-    app::setPageTitle('Gantt Chart.',$this->getResponse());
+    app::setPageTitle('Gantt Chart',$this->getResponse());
     
     if($request->hasParameter('projects_id'))
     {
