@@ -56,7 +56,49 @@ elseif(isset($filter_by['Projects']))
 
 <div id="page_width"></div>
 <div id="kanbanBoard"></div>
+<?php
+$taskProjectId = 0;
+$parentItemId = 0;
+$counter = 1;
+foreach($tasks_list as $tasks)
+{
 
+    if($tasks['projects_id']!=$taskProjectId)
+    {
+        $taskProjectId = $tasks['projects_id'];
+        echo "g.AddTaskItem(new JSGantt.TaskItem(" . $counter . ", '" . addslashes($tasks['Projects']['name']) . "','','','ffe763', '" . url_for('ganttChart/index?projects_id=' . $tasks['projects_id']). "','','',0,1,0," .  $pOpen . ",'','')); \n";
+        $parentItemId = $counter;
+        $counter++;
+    }
+
+    $estimated_time = $tasks['estimated_time'];
+
+    if($estimated_time>0)
+    {
+        $estimated_title = $estimated_time . ' ' . t::__('hours');
+    }
+    else
+    {
+        $estimated_title= '';
+    }
+
+    $start_date = app::ganttDateFormat($tasks['start_date']);
+    $end_date = app::ganttDateFormat($tasks['due_date']);
+
+    $level_padding = '';
+    if(count($tasks_tree)>0)
+    {
+        if($tasks_tree[$tasks['id']]['level']>0)
+        {
+            $level_padding = str_repeat('&nbsp;-&nbsp;',$tasks_tree[$tasks['id']]['level']);
+        }
+    }
+
+    echo "g.AddTaskItem(new JSGantt.TaskItem(" . $counter . ", '" . $level_padding . addslashes($tasks['name']) . "','" . $start_date . "','" . $end_date . "','ffe763', '" . url_for('tasksComments/index?tasks_id=' . $tasks['id']. '&projects_id=' . $tasks['projects_id']). "','','" . ($tasks['tasks_status_id']>0 ? addslashes($tasks['TasksStatus']['name']) : '') . "'," . (int)$tasks['progress'] . ",0," . $parentItemId  . ",'','','" . url_for('tasks/info?id=' . $tasks['id'] . '&projects_id=' . $tasks['projects_id']) . "')); \n";
+
+    $counter++;
+}
+?>
 <script type="text/javascript">
     $(document).ready(function () {
         var fields = [

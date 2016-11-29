@@ -3,7 +3,7 @@ all:
   doctrine:
     class: sfDoctrineDatabase
     param:
-      dsn: 'mysql:dbname=web;host=127.0.0.1'
+      dsn: 'mysql:dbname=ecs_web;host=localhost'
       profiler: false
       username: root
       password: "<?php echo urlencode('') ; ?>"
