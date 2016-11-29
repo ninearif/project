@@ -64,27 +64,27 @@ class kanbanBoardActions extends sfActions
             $this->checkTasksAccess('view');
         }
 
-        if(!$this->getUser()->hasAttribute('gantt_filter' . $this->get_pid($request)))
+        if(!$this->getUser()->hasAttribute('kanban_filter' . $this->get_pid($request)))
         {
-            $this->getUser()->setAttribute('gantt_filter' . $this->get_pid($request), Tasks::getDefaultFilter($request,$this->getUser(),'ganttChart'));
+            $this->getUser()->setAttribute('kanban_filter' . $this->get_pid($request), Tasks::getDefaultFilter($request,$this->getUser(),'kanbanBoard'));
         }
 
-        $this->filter_by = $this->getUser()->getAttribute('gantt_filter' . $this->get_pid($request));
+        $this->filter_by = $this->getUser()->getAttribute('kanban_filter' . $this->get_pid($request));
 
         if($fb = $request->getParameter('filter_by'))
         {
             $this->filter_by[key($fb)]=current($fb);
-            $this->getUser()->setAttribute('gantt_filter' . $this->get_pid($request), $this->filter_by);
+            $this->getUser()->setAttribute('kanban_filter' . $this->get_pid($request), $this->filter_by);
 
-            $this->redirect('ganttChart/index' . $this->add_pid($request));
+            $this->redirect('kanbanBoard/index' . $this->add_pid($request));
         }
 
         if($request->hasParameter('remove_filter'))
         {
             unset($this->filter_by[$request->getParameter('remove_filter')]);
-            $this->getUser()->setAttribute('gantt_filter' . $this->get_pid($request), $this->filter_by);
+            $this->getUser()->setAttribute('kanban_filter' . $this->get_pid($request), $this->filter_by);
 
-            $this->redirect('ganttChart/index' . $this->add_pid($request));
+            $this->redirect('kanbanBoard/index' . $this->add_pid($request));
         }
 
 
@@ -100,10 +100,10 @@ class kanbanBoardActions extends sfActions
 
     public function executeDoSaveFilter(sfWebRequest $request)
     {
-        Tasks::saveTasksFilter($request,$this->getUser()->getAttribute('gantt_filter' . $this->get_pid($request)),$this->getUser(),'ganttChart');
+        Tasks::saveTasksFilter($request,$this->getUser()->getAttribute('kanban_filter' . $this->get_pid($request)),$this->getUser(),'kanbanBoard');
 
         $this->getUser()->setFlash('userNotices', t::__('Filter Saved'));
-        $this->redirect('ganttChart/index' . $this->add_pid($request));
+        $this->redirect('kanbanBoard/index' . $this->add_pid($request));
     }
 
     protected function getTasks($request,$tasks_tree)
@@ -141,7 +141,7 @@ class kanbanBoardActions extends sfActions
             }
         }
 
-        $q = Tasks::addFiltersToQuery($q,$this->getUser()->getAttribute('gantt_filter' . ((int)$request->getParameter('projects_id')>0 ? $request->getParameter('projects_id') : '')));
+        $q = Tasks::addFiltersToQuery($q,$this->getUser()->getAttribute('kanban_filter' . ((int)$request->getParameter('projects_id')>0 ? $request->getParameter('projects_id') : '')));
 
         $q->addWhere('t.due_date is not null and t.start_date is not null');
 
