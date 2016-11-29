@@ -56,6 +56,8 @@ if ($sf_request->getParameter('projects_id') > 0) {
 <?php
 $state_trans = array("new", "wait", "inprogress", "evaluate", "done");
 $state_count = array(0, 0, 0, 0, 0);
+$card_color = array("#54C7FC","#FF3824","#FF9600","#FF2851","#8E8E93","#FFCD00","#44DB5E","#5751D9");
+
 $tasks_label = Doctrine_Core::getTable('TasksLabels')->createQuery('t')
     ->orderBy('t.id')
     ->execute();
@@ -105,7 +107,7 @@ $tasks_label = Doctrine_Core::getTable('TasksLabels')->createQuery('t')
                     }
                     $ass_array = explode(',', $tasks['assigned_to']);
 //    echo "<br />" . $counter . ", '" . $level_padding . addslashes($tasks['name']) . ",<br />    start:" . $start_date . ", end:" . $end_date . "<br />   URL:" . url_for('tasksComments/index?tasks_id=' . $tasks['id'] . '&projects_id=' . $tasks['projects_id']) . "', status id:" . $tasks['tasks_status_id'] . " " . ($tasks['tasks_status_id'] > 0 ? addslashes($tasks['TasksStatus']['name']) : '') . "',<br />progress: " . (int)$tasks['progress'] . "% <br />," . $parentItemId . ",'','','" . url_for('tasks/info?id=' . $tasks['id'] . '&projects_id=' . $tasks['projects_id']) . "')); \n";
-                    echo "{id: \"" . $tasks['id'] . "\", state: \"" . $state_trans[$tasks['tasks_status_id'] - 1] . "\", label: \"" . $tasks['name'] . "\", tags: \"".$tasks_label[$tasks['tasks_label_id']-1]."\", hex: \"#5dc3f0\", resourceId: ".$ass_array[0]."},";
+                    echo "{id: \"" . $tasks['id'] . "\", state: \"" . $state_trans[$tasks['tasks_status_id'] - 1] . "\", label: \"" . $tasks['name'] . "\", tags: \"".$tasks_label[$tasks['tasks_label_id']-1]."\", hex: \"".$card_color[$tasks['tasks_label_id']-1]."\", resourceId: ".$ass_array[0]."},";
                     $state_count[$tasks['tasks_status_id']-1]++;
                     $counter++;
                 }
